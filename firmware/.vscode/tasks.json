@@ -1,0 +1,21 @@
+{
+    "version": "2.0.0",
+    //指定命令执行所在路径
+     "options": {
+     "cwd": "${workspaceRoot}/build"
+     } ,
+     "tasks":[
+     {
+     //执行 cmake 命令，生成 makefile 文件
+     "type": "shell",
+     "label": "cmake",
+     "command": "cmake",
+     "args": [
+     "-G",
+     "MinGW Makefiles",
+     ".."
+     ]
+     },
+
+    ]
+}

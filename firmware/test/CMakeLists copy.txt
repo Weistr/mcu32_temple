@@ -1,0 +1,80 @@
+
+#设置CMake最低支持版本
+cmake_minimum_required(VERSION 3.17)
+#SET(CMAKE_MAKE_PROGRAM c:/Tools/mingw64/mingw64/bin/make.exe)
+SET(PRJ_NAME "RotorFly_fw")
+#定义工程名称
+project(${PRJ_NAME})
+
+#Cmake交叉编译配置
+SET(CMAKE_SYSTEM_NAME Generic)
+#设置支持ASM
+ENABLE_LANGUAGE(ASM)
+#Debug 模式
+SET(CMAKE_BUILD_TYPE "Debug")
+#Release 模式
+#SET(CMAKE_BUILD_TYPE "Release")
+
+#设置C编译工具
+SET(CMAKE_C_COMPILER arm-none-eabi-gcc)
+#ELF转换为bin和hex文件工具
+SET(CMAKE_OBJCOPY arm-none-eabi-objcopy)
+#查看文件大小工具
+SET(CMAKE_SIZE arm-none-eabi-size)
+#设置浮点选项
+SET(MCU_FLAGS "-mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16")#设置警告相关信息
+SET(CMAKE_C_FLAGS "${MCU_FLAGS} -w -Wno-unknown-pragmas")
+#设置调试选项
+SET(CMAKE_C_FLAGS_DEBUG "-O0 -g2 -ggdb")
+SET(CMAKE_C_FLAGS_RELEASE "-O3")
+#添加宏定义
+ADD_DEFINITIONS(
+    -DGD32F3x0
+    -DGD32F350
+    -DUSE_STDPERIPH_DRIVER
+)
+#添加头文件搜索路径
+include_directories(
+    Lib/GD32_Lib/CMSIS
+    Lib/GD32_Lib/CMSIS/GD/GD32F3x0/Include
+    Lib/GD32_Lib/GD32F3x0_standard_peripheral/Include
+    drivers/Inc
+    App/Inc
+)
+# GLOB 选项将会为所有匹配查询表达式的文件生成一个文件 list，并将该 list 存储进变量所定义的STD_LIB,SRC_CORE 里
+
+#设置启动文件 C 属性
+set_property(SOURCE Lib/GD32_Lib/CMSIS/GD/GD32F3x0/Source/GCC/startup_gd32f3x0.S PROPERTY LANGUAGE C)
+
+file(GLOB_RECURSE SOURCES 
+    "Lib/GD32_Lib/CMSIS/GD/GD32F3x0/Source/GCC/*.S"    
+    "Lib/GD32_Lib/CMSIS/GD/GD32F3x0/Source/*.c"
+    "Lib/GD32_Lib/GD32F3x0_standard_peripheral/Source/*.c"
+    "drivers/*.c"
+    "App/*.c"
+)
+
+
+
+
+#设置链接文件相关路径和变量
+SET(FLASH_LD_FILE ${PROJECT_SOURCE_DIR}/gd32f3x0_flash.ld)
+SET(LINKER_SCRIPT ${FLASH_LD_FILE})
+#设置链接选项
+#SET(CMAKE_EXE_LINKER_FLAGS
+#"--specs=nano.specs -specs=nosys.specs -T${LINKER_SCRIPT} -Wl,-
+#Map=${PROJECT_BINARY_DIR}/${PRJ_NAME}.map,--cref -Wl,--gc-sections")
+add_link_options(-Wl,-gc-sections,--print-memory-usage,-Map=${PROJECT_BINARY_DIR}/${PRJ_NAME}.map)
+add_link_options(-mcpu=cortex-m4 -mthumb -mthumb-interwork)
+add_link_options(-T ${LINKER_SCRIPT})
+#生成目标文件
+add_executable(${PRJ_NAME}.elf ${SOURCES} ${LINKER_SCRIPT})
+
+set(HEX_FILE ${PROJECT_BINARY_DIR}/${PRJ_NAME}.hex)
+set(BIN_FILE ${PROJECT_BINARY_DIR}/${PRJ_NAME}.bin)
+
+add_custom_command(TARGET ${PRJ_NAME}.elf POST_BUILD
+        COMMAND ${CMAKE_OBJCOPY} -Oihex $<TARGET_FILE:${PRJ_NAME}.elf> ${HEX_FILE}
+        COMMAND ${CMAKE_OBJCOPY} -Obinary $<TARGET_FILE:${PRJ_NAME}.elf> ${BIN_FILE}
+        COMMENT "Building ${HEX_FILE}
+Building ${BIN_FILE}")

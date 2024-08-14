@@ -1,0 +1,40 @@
+
+#设置CMake最低支持版本
+cmake_minimum_required(VERSION 3.17)
+#SET(CMAKE_MAKE_PROGRAM c:/Tools/mingw64/mingw64/bin/make.exe)
+SET(PRJ_NAME "RotorFly_fw")
+#定义工程名称
+project(${PRJ_NAME})
+
+#Cmake交叉编译配置
+SET(CMAKE_SYSTEM_NAME Generic)
+#设置支持ASM
+ENABLE_LANGUAGE(ASM)
+#Debug 模式
+SET(CMAKE_BUILD_TYPE "Debug")
+#Release 模式
+#SET(CMAKE_BUILD_TYPE "Release")
+
+#设置C编译工具
+SET(CMAKE_C_COMPILER arm-none-eabi-gcc)
+#ELF转换为bin和hex文件工具
+SET(CMAKE_OBJCOPY arm-none-eabi-objcopy)
+#查看文件大小工具
+SET(CMAKE_SIZE arm-none-eabi-size)
+#设置浮点选项
+SET(MCU_FLAGS "-mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16")#设置警告相关信息
+SET(CMAKE_C_FLAGS "${MCU_FLAGS} -w -Wno-unknown-pragmas")
+#设置调试选项
+SET(CMAKE_C_FLAGS_DEBUG "-O0 -g2 -ggdb")
+SET(CMAKE_C_FLAGS_RELEASE "-O3")
+#添加宏定义
+ADD_DEFINITIONS(
+    -DGD32F3x0
+    -DGD32F350
+    -DUSE_STDPERIPH_DRIVER
+)
+
+
+#添加目录gd_libs和src
+add_subdirectory(Lib/GD32_Lib)
+add_subdirectory(App)
