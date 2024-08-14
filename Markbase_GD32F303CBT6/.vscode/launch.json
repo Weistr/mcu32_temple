@@ -1,0 +1,25 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+    {
+    //指定命令执行所在路径
+    "cwd": "${workspaceRoot}",
+    //可执行文件所在路径
+    "executable": "build/Markbase_GD32F303CBT6.elf",
+    "name": "Debug Microcontroller",
+    "request": "launch",
+    "type": "cortex-debug",
+    //svd 文件所在路径
+    //"svdFile": "./GD32F10x_MD.svd",
+    //openocd 命令
+    "servertype": "openocd",
+    //openocd 配置文件所在相对路径
+    "configFiles": [
+   "./debugconfig.cfg ",
+    ] 
+}
+]
+}

@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "gd32f30x.h": "c",
+        "gd32f30x_gpio.h": "c",
+        "systick.h": "c",
+        "main.h": "c",
+        "system_gd32f30x.h": "c",
+        "gd32f30x_libopt.h": "c"
+    }
+}
