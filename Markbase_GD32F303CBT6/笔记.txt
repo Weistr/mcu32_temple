@@ -30,3 +30,10 @@
 3.FPU与dsp
   增加全局宏：__TARGET_FPU_VFP(keil,或者用的armcc，才有用)
   由于用到GCC所以不需要全局宏，在gcc后面加指令即可-mfloat-abi=hard -mfpu=vfpv4-d16
+
+4.配置中各种问题
+cmake出错，找不到文件：cmake指令指定txt文件
+make出错：.s文件有问题，写了没定义的函数
+cortexDeug FlashError: ld文件.s文件有问
+cortexDeug版本问题，应该完全按照官方例程
+gcc版本问题，找不到ld中的定义文件，应该使用官方提供的gcc
