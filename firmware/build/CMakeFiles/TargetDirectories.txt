@@ -1,3 +1,0 @@
-C:/Users/86133/Documents/Project/test/mcu32_temple/firmware/build/CMakeFiles/Makerbase_GD32F303CBT6_test.elf.dir
-C:/Users/86133/Documents/Project/test/mcu32_temple/firmware/build/CMakeFiles/edit_cache.dir
-C:/Users/86133/Documents/Project/test/mcu32_temple/firmware/build/CMakeFiles/rebuild_cache.dir
