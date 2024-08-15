@@ -69,7 +69,7 @@ ADD_DEFINITIONS(
 )
 #请在此处此处添加.c文件目录
 file(GLOB_RECURSE SOURCES 
-    "GD32F30x_Firmware_Library_V220/CMSIS/GD/GD32F30x/Source/GCC/startup_gd32f30x_hd3.s"    
+    "GD32F30x_Firmware_Library_V220/CMSIS/GD/GD32F30x/Source/GCC/startup_gd32f30x_hd.s"    
     "GD32F30x_Firmware_Library_V220/CMSIS/GD/GD32F30x/Source/*.c"
     "GD32F30x_Firmware_Library_V220/GD32F30x_standard_peripheral/Source/*.c"
     "app/*.c*"
