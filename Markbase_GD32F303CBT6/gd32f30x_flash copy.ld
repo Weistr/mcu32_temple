@@ -5,24 +5,24 @@ ENTRY(Reset_Handler)
 /* Highest address of the user mode stack */
 _estack = ORIGIN(RAM) + LENGTH(RAM);    /* end of RAM */
 /* Generate a link error if heap and stack don't fit into RAM */
+_Min_Heap_Size = 0x200;      /* required amount of heap  */
+_Min_Stack_Size = 0x400; /* required amount of stack */
 
 /* Specify the memory areas */
 MEMORY
 {
-  FLASH (rx)      : ORIGIN = 0x08000000, LENGTH = 128K
-  RAM (xrw)       : ORIGIN = 0x20000000, LENGTH = 32K
+RAM (xrw)      : ORIGIN = 0x20000000, LENGTH = 32K
+FLASH (rx)      : ORIGIN = 0x8000000, LENGTH = 128K
 }
 
 /* Define output sections */
 SECTIONS
 {
-  _Min_Stack_Size = 0x400; /* required amount of stack */
-  _Min_Heap_Size = 0x200;      /* required amount of heap  */
   /* The startup code goes first into FLASH */
-  .vectors :
+  .isr_vector :
   {
     . = ALIGN(4);
-    KEEP(*(.vectors)) /* Startup code */
+    KEEP(*(.isr_vector)) /* Startup code */
     . = ALIGN(4);
   } >FLASH
 
@@ -52,18 +52,14 @@ SECTIONS
     . = ALIGN(4);
   } >FLASH
 
-  .ARM.extab : 
-  { 
-    *(.ARM.extab* .gnu.linkonce.armextab.*) 
-  } >FLASH
+  .ARM.extab   : { *(.ARM.extab* .gnu.linkonce.armextab.*) } >FLASH
   .ARM : {
     __exidx_start = .;
     *(.ARM.exidx*)
     __exidx_end = .;
   } >FLASH
-  .ARM.attributes : { *(.ARM.attributes) } > FLASH
 
-  .preinit_array :
+  .preinit_array     :
   {
     PROVIDE_HIDDEN (__preinit_array_start = .);
     KEEP (*(.preinit_array*))
@@ -79,8 +75,8 @@ SECTIONS
   .fini_array :
   {
     PROVIDE_HIDDEN (__fini_array_start = .);
-    KEEP (*(.fini_array*))
     KEEP (*(SORT(.fini_array.*)))
+    KEEP (*(.fini_array*))
     PROVIDE_HIDDEN (__fini_array_end = .);
   } >FLASH
 
@@ -122,12 +118,21 @@ SECTIONS
     PROVIDE ( end = . );
     PROVIDE ( _end = . );
     . = . + _Min_Heap_Size;
-    PROVIDE( _heap_end = . );
     . = . + _Min_Stack_Size;
-    PROVIDE( _sp = . ); 
+    . = ALIGN(8);
   } >RAM AT>RAM
 
   
+
+  /* Remove information from the standard libraries */
+  /DISCARD/ :
+  {
+    libc.a ( * )
+    libm.a ( * )
+    libgcc.a ( * )
+  }
+
+  .ARM.attributes 0 : { *(.ARM.attributes) }
 }
 
-GROUP(libgcc.a libc.a libm.a libnosys.a)
+
