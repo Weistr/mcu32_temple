@@ -1,10 +1,6 @@
 
-/* Entry Point */
-ENTRY(Reset_Handler)
 
-/* Highest address of the user mode stack */
-_estack = ORIGIN(RAM) + LENGTH(RAM);    /* end of RAM */
-/* Generate a link error if heap and stack don't fit into RAM */
+ENTRY(Reset_Handler)
 
 /* Specify the memory areas */
 MEMORY
