@@ -2,7 +2,7 @@
 
 ENTRY(Reset_Handler)
 
-/* Specify the memory areas */
+/* Specify the memory areas according to your chips*/
 MEMORY
 {
   FLASH (rx)      : ORIGIN = 0x08000000, LENGTH = 128K
